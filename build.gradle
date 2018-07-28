@@ -58,15 +58,15 @@ allprojects {
         docker {
             maintainer = 'zqw0209 <zqw0209@sina.com>'
             baseImage = 'frolvlad/alpine-oraclejdk8:slim'
-            useApi = true
-            hostUrl = 'https://hub.docker.com/'
-            apiUsername = 'zqw0209'
-            apiPassword = '12345678a'
-            apiEmail = 'zqw0209@sina.com'
+//            useApi = true
+//            hostUrl = 'https://hub.docker.com/'
+//            apiUsername = 'zqw0209'
+//            apiPassword = '12345678a'
+//            apiEmail = 'zqw0209@sina.com'
         }
         task dockerBuild(type: Docker, dependsOn: build) {
             applicationName = project.name
-//            tag = "zqw0209/${applicationName}:${tagVersion}"
+            tag = "zqw0209/${applicationName}:${tagVersion}"
             addFile {
                 from configurations.archives.artifacts.files
                 into '/data/workspace/' + project.name
