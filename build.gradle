@@ -57,7 +57,7 @@ allprojects {
         apply plugin: 'docker'
         docker {
             maintainer = 'zqw0209 <zqw0209@sina.com>'
-            baseImage = 'frolvlad/alpine-oraclejdk8:slim'
+            baseImage = 'primetoninc/jdk:1.7'
         }
         task dockerBuild(type: Docker, dependsOn: build) {
             applicationName = project.name
