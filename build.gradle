@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+//        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+//        maven { url "https://oss.sonatype.org/content/groups/public/" }
+        maven { url "https://repo.spring.io/libs-milestone/" }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "se.transmode.gradle:gradle-docker:${transmodeGradleDockerVersion}"
+    }
+}
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    group = 'com.iscas.docker'
+    version = '1.0-SNAPSHOT'
+    sourceCompatibility = 1.8
+
+    configurations {
+        compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+        compile.exclude group: 'org.apache.tomcat'
+        compile.exclude group: 'org.apache.tomcat.embed'
+    }
+
+    repositories {
+//        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+//        maven { url "https://oss.sonatype.org/content/groups/public/" }
+        maven { url "https://repo.spring.io/libs-milestone/" }
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile "org.springframework.boot:spring-boot-starter-test"
+
+        compile('org.springframework.boot:spring-boot-starter-web')
+        compile('org.springframework.boot:spring-boot-starter-undertow')
+
+    }
+
+    dependencyManagement {
+        imports {
+
+            mavenBom "io.spring.platform:platform-bom:${platformVersion}"
+        }
+    }
+
+    if (project.subprojects) {
+//        bootRepackage {
+//            enabled = false
+//        }
+    } else {
+        apply plugin: 'docker'
+        docker {
+            maintainer = 'zqw0209 <zqw0209@sina.com>'
+            baseImage = 'openjdk:8-jre-alpine'
+        }
+        task dockerBuild(type: Docker, dependsOn: build) {
+            applicationName = project.name
+            addFile {
+                from configurations.archives.artifacts.files
+                into '/data/workspace/' + project.name
+            }
+            workingDir '/data/workspace/' + project.name
+            setEnvironment('HOST_MACHINE_IP', hostMachineIp)
+            defaultCommand(['java', '-jar', '-Dspring.profiles.active=docker', "${project.name}-${project.version}.jar"])
+        }
+    }
+
+}
