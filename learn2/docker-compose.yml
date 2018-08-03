@@ -4,7 +4,7 @@ services:
   springappserver:
     build:
       context: .
-      dockerfile: springapp.dockerfile
+      dockerfile: dockerfile
     ports:
       - "8080:8080"
     volumes:
