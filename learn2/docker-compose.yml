@@ -1,7 +1,7 @@
 version : '2'
 services:
 
-  springappserver:
+  learn2:
     build:
       context: .
       dockerfile: dockerfile
@@ -16,3 +16,5 @@ services:
     image: docker.io/mysql:5.7
     ports:
       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
