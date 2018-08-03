@@ -1,3 +1,4 @@
 rootProject.name = 'docker'
 include 'learn1'
+include 'learn2'
 
